@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrateDb": "pnpm dlx drizzle-kit generate:pg && pnpm dlx tsx lib/db/scripts/migrate.ts",
+    "migrateDb": "pnpm drizzle-kit generate:pg && pnpm dlx tsx lib/db/scripts/migrate.ts",
+    "seed": "pnpm dlx tsx lib/db/scripts/seed.ts",
     "postBuild": "next-sitemap"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "@mui/material": "^5.15.9",
     "@mui/material-nextjs": "^5.15.9",
     "@neondatabase/serverless": "^0.7.2",
+    "@next/env": "^14.1.0",
     "drizzle-kit": "^0.20.13",
     "drizzle-orm": "^0.29.3",
     "framer-motion": "^11.0.3",
@@ -30,6 +32,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.0",
+    "react-query": "^3.39.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {

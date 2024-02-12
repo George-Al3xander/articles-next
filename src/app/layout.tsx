@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
-
 import { Container, ThemeProvider } from "@mui/material";
 import theme from "@/mui/theme";
 import Header from "@/components/header/header";
+
+
+
 const inter = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,11 +24,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={theme}>     
               <Header />
               <Container sx={{pt: "4rem"}}>
                   {children}
-              </Container>
+              </Container>       
           </ThemeProvider>
       </AppRouterCacheProvider>
       </body>

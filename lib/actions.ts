@@ -1,7 +1,8 @@
 "use server"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
-import { getPostsPagination, getUser, insertPost } from "./db/methods"
-import { FieldVal } from "@/components/posts/create post form/create-post-form"
+import { NewPost, NewPostAsParam, getPostsPagination, getUser, insertPost, insertSuggestion } from "./db/methods"
+import { boolean } from "drizzle-orm/mysql-core"
+
 
 export async function getPostsAction  (page:number= 1)  {  
 	
@@ -27,19 +28,38 @@ export const isCurrUserAuthor = async (authorId: number): Promise<boolean> => {
     return true
 }
 
-
-export const createPost = async (data:FieldVal) => {    
-    const {isAuthenticated, getUser: getKindeUser} = await getKindeServerSession()
-    const isLogged  = await isAuthenticated()
-
-    try {
-        if(!isLogged) throw new Error("Not authenticated")
-        const currUser = await getKindeUser();
-        const dbUser = (await getUser({kindeId: currUser!.id}))[0]
-        await insertPost({authorId: +dbUser.id, title: data.title, content: data.content})
+const postDbAction = async ({callbackFn, data}:
+        {data: Omit<NewPostAsParam, "authorId"> ,
+        callbackFn: (data: NewPostAsParam) => Promise<NewPostAsParam[]>}
         
-        return {success: true} 
-    } catch (error) {
-        return {success: false,error: error as string | undefined}
-    }
+        ) => {
+        const {isAuthenticated, getUser: getKindeUser} = await getKindeServerSession()
+        const isLogged  = await isAuthenticated()
+
+        try {
+            if(!isLogged) throw new Error("Not authenticated")
+            const currUser = await getKindeUser();
+            const dbUser = (await getUser({kindeId: currUser!.id}))[0]
+            await callbackFn({authorId: +dbUser.id,...data})
+            
+            return {success: true} 
+        } catch (error) {
+            return {success: false,error: error as string | undefined}
+        }
 }
+
+
+export const createPost = async (data:NewPostAsParam) => {    
+    const res = await postDbAction({callbackFn:insertPost, data})
+    return res
+}
+
+export const suggestPost = async (data:NewPostAsParam) => {    
+    const res = await postDbAction({callbackFn:insertSuggestion, data})
+    return res
+}
+
+
+
+
+

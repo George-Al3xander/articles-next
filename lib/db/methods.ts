@@ -1,6 +1,6 @@
 import { count, desc, eq, sql } from "drizzle-orm"
 import { db } from "./index"
-import { posts, users } from "./schema"
+import { pending, posts, users } from "./schema"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 
 export const getPosts = async () => {
@@ -27,13 +27,17 @@ export async function getPostsPagination  (page:number= 1, limit:number= 5)  {
 } 
 
 export type NewPost = Required<typeof posts.$inferInsert>
+export type NewPostAsParam = Omit<NewPost, "createdAt" | "updatedAt" | "id"> 
 
 //Omit<, "createdAt" | "updatedAt" | "id"> & {createdAt?: string, updatedAt?: string, id?: number}
 
-export const insertPost = async (post: Omit<NewPost, "createdAt" | "updatedAt" | "id"> ) => {
+export const insertPost = async (post: NewPostAsParam) => {
     return db.insert(posts).values(post).returning()
 }
 
+export const insertSuggestion = async (post: NewPostAsParam) => {
+    return db.insert(pending).values(post).returning()
+}
 
 export const getPostsCount = async (userId?: number) => {
     if(userId) {
@@ -42,7 +46,6 @@ export const getPostsCount = async (userId?: number) => {
         return (await db.select({ value: count(posts.id) }).from(posts))[0].value;
     }     
 }
-
 
 export type NewUser =  Required<typeof users.$inferInsert>
 
@@ -70,8 +73,27 @@ export const getPost =async (id: number) => {
     return post 
 }
 
-
-
 export const insertUser = async (User: NewUser) => {
     return db.insert(users).values(User).returning()
 }
+
+export const getPendingCount = async() => {
+    const postsCount = await db.select({ value: count() }).from(posts);
+    return postsCount
+}
+
+
+export const getPendingPreview = async  () => {
+    const postsReturn = await db.select().from(posts).orderBy(desc(posts.createdAt)).limit(3)
+
+    return postsReturn
+}
+
+
+// export const getPostAuthor = async ({userId,postType}:{userId: number, postType: "pending" | "regular"}) => {
+//     const schema = postType == "pending" ? pending : posts
+
+//     const user = await db.select().from(schema).where(eq(users.id, userId));
+//     const {name,id} = user[0]
+//     return {name,id}
+// }
