@@ -13,17 +13,20 @@ import moment from "moment"
 const AdminMenu = async () => {   
     const postsCount = await getPendingCount();
     const pendings = await getPendingPreview();
-    
     return(<MenuWrapper trigger={<IconButton><Badge color="info" badgeContent={postsCount[0].value}><NotificationsIcon /></Badge></IconButton>}>
         {postsCount[0].value ?
         <>
             {pendings.map(async (post) => {
                 const userInfo = await getPostAuthorInfo(post.authorId)
+                const dateCreated =  moment(post.createdAt);
+                const now = moment()               
+                const displayDate = Math.abs(dateCreated.diff(now, "days")) > 7 ? " on " + dateCreated.format("ll") : dateCreated.from(now)
+
                 return <MenuItem key={post.id+"-post-preview"}>
                     <Link href={`/pending/${post.id}`}>
                         <Stack>  
                             <Typography> {post.title}</Typography>
-                            <Typography  variant="subtitle2">Suggested on {moment(post.createdAt).format("ll")}</Typography>
+                            <Typography  variant="subtitle2">Suggested  {displayDate}</Typography>
                             <Typography  variant="subtitle2">By {userInfo.name}</Typography>
                             <Divider />                            
                         </Stack>
