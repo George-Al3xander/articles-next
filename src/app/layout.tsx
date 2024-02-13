@@ -26,7 +26,7 @@ export default function RootLayout({
       <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>     
               <Header />
-              <Container sx={{pt: "4rem"}}>
+              <Container sx={{pt: "6rem"}}>
                   {children}
               </Container>       
           </ThemeProvider>

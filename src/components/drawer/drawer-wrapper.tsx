@@ -11,17 +11,16 @@ import CloseIcon from '@mui/icons-material/Close';
 const DrawerWrapper = ({children}: {children: ReactNode}) => {
     const [open, setOpen] = useState(false)
     const close = () => setOpen(false)
-    return(<div>
-        <IconButton onClick={() => setOpen((prev) => !prev)}><MenuIcon /></IconButton>
+    return(<Box sx={{md: {display: "none"}}} >
+        <IconButton onClick={() => setOpen(true)}><MenuIcon /></IconButton>
         <Drawer  onClose={close} open={open} anchor="right">
-            <List  sx={{py: "2rem", px: "1rem", alignItems: "flex-end"}}  onClick={close}> 
-            
-                <IconButton><CloseIcon /></IconButton>   
-                  
+            <List   sx={{p: "1rem", textAlign: "center"}}  onClick={close}> 
+                <Box mb={4}><IconButton><CloseIcon /></IconButton>   </Box>
+                
                 {children}
             </List>
         </Drawer>
-    </div>)
+    </Box>)
 }
 
 export default DrawerWrapper

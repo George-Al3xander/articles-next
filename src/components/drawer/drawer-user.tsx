@@ -14,7 +14,7 @@ const UserDrawer = async (props:{ isAdmin: boolean, isLogged: boolean}) => {
     const user =await getUser()
     return(<Box sx={{display: {xs: "initial", md: "none"}}}>        
         <DrawerWrapper >
-            <Divider>CATEGORIES</Divider>
+            <Divider sx={{mb: "1rem"}}>CATEGORIES</Divider>
             <Box sx={{mb:"2rem"}}><Nav type='drawer'/></Box>
             <Divider sx={{mb: "1rem"}}><UserBadge isLogged={props.isLogged} user={user} /></Divider>
             <MenuItems {...props}/>
