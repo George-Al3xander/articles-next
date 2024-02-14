@@ -1,7 +1,6 @@
-import { count, desc, eq, sql } from "drizzle-orm"
+import { count, desc, eq } from "drizzle-orm"
 import { db } from "./index"
-import { pending, posts, users } from "./schema"
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { pending, posts} from "./schema"
 
 export const getPosts = async () => {
     const selectResult = await db.select().from(posts).orderBy(desc(posts.createdAt))
@@ -39,7 +38,8 @@ export const insertSuggestion = async (post: NewPostAsParam) => {
     return db.insert(pending).values(post).returning()
 }
 
-export const getPostsCount = async (userId?: number) => {
+
+export const getPostsCount = async (userId?: string) => {
     if(userId) {
         return (await db.select({ value: count(posts.id) }).from(posts).where(eq(posts.authorId, userId)))[0].value;
     } else {
@@ -47,41 +47,15 @@ export const getPostsCount = async (userId?: number) => {
     }     
 }
 
-export type NewUser =  Required<typeof users.$inferInsert>
-
-export const getUsers = async () : Promise<NewUser[]> => {
-    const selectResult = await db.select().from(users)
-    return selectResult
-}
-
-export const getUser = async ({kindeId, email}:{kindeId?: string, email?: string}) : Promise<NewUser[]> => {
-    if(kindeId) {
-        return await db.select().from(users).where(eq(users.kindeId, kindeId))
-    } 
-   
-    return await db.select().from(users).where(eq(users.email, email!)) 
-}
-
-export const getPostAuthorInfo = async (id: number) => {
-    const user = await db.select().from(users).where(eq(users.id, id));
-    const {name} = user[0]
-    return {name,id}
-}
-
 export const getPost =async (id: number) => {
     const post = await db.select().from(posts).where(eq(posts.id, id));
     return post 
-}
-
-export const insertUser = async (User: NewUser) => {
-    return db.insert(users).values(User).returning()
 }
 
 export const getPendingCount = async() => {
     const postsCount = await db.select({ value: count() }).from(posts);
     return postsCount
 }
-
 
 export const getPendingPreview = async  () => {
     const postsReturn = await db.select().from(posts).orderBy(desc(posts.createdAt)).limit(3)
@@ -90,10 +64,3 @@ export const getPendingPreview = async  () => {
 }
 
 
-// export const getPostAuthor = async ({userId,postType}:{userId: number, postType: "pending" | "regular"}) => {
-//     const schema = postType == "pending" ? pending : posts
-
-//     const user = await db.select().from(schema).where(eq(users.id, userId));
-//     const {name,id} = user[0]
-//     return {name,id}
-// }

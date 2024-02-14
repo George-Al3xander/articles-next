@@ -1,5 +1,5 @@
 import {z} from "zod"
-import { checkProfanity } from "../utils"
+
 
 export const PostCreationSchema = z.object({
     title: z.string().min(5, "Title must be at least 5 characters in length").max(50, "Title can't be longer than 50 characters"),
@@ -10,10 +10,10 @@ export const PostCreationSchema = z.object({
     message: "Enter at least one tag",
     path: ["tags"]
 })
-.refine((data) =>  data.tags ? !checkProfanity(data.tags) : true, {
-    message: "Explicit language",
-    path: ["tags"]
-})
+// .refine((data) =>  data.tags ? !checkProfanity(data.tags) : true, {
+//     message: "Explicit language",
+//     path: ["tags"]
+// })
 .refine((data) =>  data.content.replaceAll(" ", "").length >= 150, {
     message: "Content must be at least 150 characters in length",
     path: ["content"]

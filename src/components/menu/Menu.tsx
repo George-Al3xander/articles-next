@@ -2,18 +2,16 @@
 import {IconButton, Stack } from '@mui/material';
 import UserMenu from './user-menu';
 import AdminMenu from './admin-menu';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Suspense } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import UserDrawer from '../drawer/drawer-user';
+import { getCurrUserAdminStatus, getCurrAuthStatus } from '../../../lib/kinde/actions';
 
-export default async function MenuDashboard() { 
-  const {getPermission, isAuthenticated}=  getKindeServerSession()  
-  const canAccept = await getPermission("accept:post");
-  const canReject = await getPermission("reject:post") ;
-  const isAdmin = [canAccept, canReject].every((t) => t?.isGranted === true);
-  const isLogged = await isAuthenticated();
+export default async function MenuDashboard() {  
+  
+  const isAdmin = await getCurrUserAdminStatus()
+  const isLogged = await getCurrAuthStatus()
   
 
     

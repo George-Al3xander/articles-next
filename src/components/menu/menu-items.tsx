@@ -1,13 +1,13 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import Link from 'next/link';
 import {RegisterLink, LoginLink, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/components";
 import MenuItem from '@mui/material/MenuItem';
+import { getCurrUser } from "../../../lib/kinde/actions";
 
 
 
 const MenuItems = async ({isAdmin, isLogged}:{ isAdmin: boolean, isLogged: boolean}) => {
-    const {getUser} = getKindeServerSession()
-    const user = await getUser();
+   
+    const user = await getCurrUser();
 
     const menuItemStyle = {px: "4rem", textAlign: "center"};
     return(<>

@@ -1,46 +1,45 @@
 "use server"
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
-import { NewPost, NewPostAsParam, getPostsPagination, getUser, insertPost, insertSuggestion } from "./db/methods"
-import { boolean } from "drizzle-orm/mysql-core"
+import { NewPostAsParam, getPostsPagination,  insertPost, insertSuggestion } from "./db/methods"
+import { getCurrAuthStatus, getCurrUser } from "./kinde/actions"
 
 
-export async function getPostsAction  (page:number= 1)  {  
-	
+
+
+export async function getPostsAction  (page:number= 1)  {  	
     const posts = await getPostsPagination(page)
-
 	return posts
 } 
 
 
 
-export const isCurrUserAuthor = async (authorId: number): Promise<boolean> => {    
-    const {isAuthenticated, getUser: getKindeUser} = await getKindeServerSession()
+// export const isCurrUserAuthor = async (authorId: number): Promise<boolean> => {    
     
-    const isLogged  = await isAuthenticated()
-    if(!isLogged) return false
+//     const isLogged  = await isAuthenticated()
+//     if(!isLogged) return false
     
-    const user = await getKindeUser();
-    if(!user) return false
+//     const user = await getKindeCurrUser();
+//     if(!user) return false
 
-    const dbUser = await getUser({kindeId: user.id})
-    if(dbUser[0].id !== authorId) return false;
+//     const dbUser = await getUser({kindeId: user.id})
+//     if(dbUser[0].id !== authorId) return false;
 
-    return true
-}
+//     return true
+// }
 
+
+// Parent function for the creation/suggestion post to db
 const postDbAction = async ({callbackFn, data}:
         {data: Omit<NewPostAsParam, "authorId"> ,
         callbackFn: (data: NewPostAsParam) => Promise<NewPostAsParam[]>}
         
         ) => {
-        const {isAuthenticated, getUser: getKindeUser} = await getKindeServerSession()
-        const isLogged  = await isAuthenticated()
+        const isLogged  = await getCurrAuthStatus()
 
         try {
             if(!isLogged) throw new Error("Not authenticated")
-            const currUser = await getKindeUser();
-            const dbUser = (await getUser({kindeId: currUser!.id}))[0]
-            await callbackFn({authorId: +dbUser.id,...data})
+            const currUser = await getCurrUser()   
+            if(!currUser) throw new Error("Not authenticated")   
+            await callbackFn({authorId: currUser.id,...data})
             
             return {success: true} 
         } catch (error) {

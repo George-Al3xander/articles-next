@@ -2,15 +2,15 @@ import UserBadge from '../header/header-user-badge';
 
 import { Box} from '@mui/material';
 import MenuWrapper from './menu-wrapper';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import MenuItems from './menu-items';
+import { getCurrUser } from '../../../lib/kinde/actions';
 
 
 
 
 const UserMenu = async (props:{ isAdmin: boolean, isLogged: boolean}) => {
-    const {getUser} = getKindeServerSession()
-    const user = await getUser()
+
+    const user = await getCurrUser()
     return(<Box sx={{display: {xs: "none", md: "initial"}}}>        
         <MenuWrapper trigger={<UserBadge isLogged={props.isLogged} user={user}/>}>
             <MenuItems {...props}/>
