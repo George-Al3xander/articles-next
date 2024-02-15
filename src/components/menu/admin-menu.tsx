@@ -1,13 +1,10 @@
 import { Badge, Divider, IconButton, MenuItem, Stack, Typography } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useState } from "react";
 import MenuWrapper from "./menu-wrapper";
-import { db } from "../../../lib/db";
-import { count } from "drizzle-orm";
-import { posts } from "../../../lib/db/schema";
-import { getPendingCount, getPendingPreview, getPostAuthorInfo } from "../../../lib/db/methods";
+import { getPendingCount, getPendingPreview } from "../../../lib/db/methods";
 import Link from "next/link";
 import moment from "moment"
+import { getUserInfo } from "../../../lib/kinde/actions";
 
 
 const AdminMenu = async () => {   
@@ -17,7 +14,7 @@ const AdminMenu = async () => {
         {postsCount[0].value ?
         <>
             {pendings.map(async (post) => {
-                const userInfo = await getPostAuthorInfo(post.authorId)
+                const userInfo = await getUserInfo(post.authorId)
                 const dateCreated =  moment(post.createdAt);
                 const now = moment()               
                 const displayDate = Math.abs(dateCreated.diff(now, "days")) > 7 ? " on " + dateCreated.format("ll") : dateCreated.from(now)
@@ -27,7 +24,7 @@ const AdminMenu = async () => {
                         <Stack>  
                             <Typography> {post.title}</Typography>
                             <Typography  variant="subtitle2">Suggested  {displayDate}</Typography>
-                            <Typography  variant="subtitle2">By {userInfo.name}</Typography>
+                            <Typography  variant="subtitle2">By {`${userInfo.given_name} ${userInfo.family_name}`}</Typography>
                             <Divider />                            
                         </Stack>
                     </Link>
