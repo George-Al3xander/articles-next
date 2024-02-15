@@ -3,7 +3,7 @@ import UserBadge from '../header/header-user-badge';
 import { Box} from '@mui/material';
 import MenuWrapper from './menu-wrapper';
 import MenuItems from './menu-items';
-import { getCurrUser } from '../../../lib/kinde/actions';
+import { getCurrUser } from '../../../lib/kinde/funcs';
 
 
 

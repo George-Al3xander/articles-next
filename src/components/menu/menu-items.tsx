@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import {RegisterLink, LoginLink, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/components";
 import MenuItem from '@mui/material/MenuItem';
-import { getCurrUser } from "../../../lib/kinde/actions";
+import { getCurrUser } from "../../../lib/kinde/funcs";
 
 
 

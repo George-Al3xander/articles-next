@@ -4,7 +4,7 @@ import MenuWrapper from "./menu-wrapper";
 import { getPendingCount, getPendingPreview } from "../../../lib/db/methods";
 import Link from "next/link";
 import moment from "moment"
-import { getUserInfo } from "../../../lib/kinde/actions";
+import { getUserInfo } from "../../../lib/kinde/server-actions";
 
 
 const AdminMenu = async () => {   

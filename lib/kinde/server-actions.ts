@@ -1,5 +1,5 @@
 "use server"
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+
 import {loadEnvConfig} from "@next/env"
 loadEnvConfig(process.cwd())
 
@@ -22,11 +22,6 @@ const kindeReqHeaders = {
     Authorization:`Bearer ${process.env.KINDE_API_ACCESS_TOKEN}`
 };
 
-const {getPermission, isAuthenticated, getUser} =  getKindeServerSession()
-
-
-
-
 export const getUserInfo = async (userId: string)  => {
     try {
         const res = await fetch(`${process.env.KINDE_ISSUER_URL!}/api/v1/user?id=${userId}`, {
@@ -39,27 +34,4 @@ export const getUserInfo = async (userId: string)  => {
     } catch (error: {message: string} | any) {        
         return {success: false, message: error.message ?? "Something went wrong"}
     }   
-}
-
-
-
-export const getCurrUserAdminStatus = async () : Promise<boolean> => {
-    const canAccept = await getPermission("accept:post");
-    const canReject = await getPermission("reject:post");
-    const canDeleteAny = await getPermission("delete:anypost");
-    const canEditAny = await getPermission("edit:anypost");
-    const isAdmin = [canAccept, canReject, canDeleteAny, canEditAny].every((t) => t?.isGranted === true);
-
-    return isAdmin
-}
-
-
-export const getCurrAuthStatus = async () => {
-    const isLogged = await isAuthenticated();
-
-    return isLogged
-}
-
-export const getCurrUser = async () => {
-    return await getUser();
 }

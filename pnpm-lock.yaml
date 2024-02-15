@@ -63,7 +63,7 @@ dependencies:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
   react-hook-form:
-    specifier: ^7.50.0
+    specifier: ^7.50.1
     version: 7.50.1(react@18.2.0)
   react-markdown:
     specifier: ^9.0.1

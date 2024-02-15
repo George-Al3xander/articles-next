@@ -1,6 +1,6 @@
 "use server"
 import { NewPostAsParam, getPostsPagination,  insertPost, insertSuggestion } from "./db/methods"
-import { getCurrAuthStatus, getCurrUser } from "./kinde/actions"
+import { getCurrAuthStatus, getCurrUser } from "./kinde/funcs"
 
 
 

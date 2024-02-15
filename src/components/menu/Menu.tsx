@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import UserDrawer from '../drawer/drawer-user';
-import { getCurrUserAdminStatus, getCurrAuthStatus } from '../../../lib/kinde/actions';
+import { getCurrUserAdminStatus, getCurrAuthStatus } from '../../../lib/kinde/funcs';
 
 export default async function MenuDashboard() {  
   

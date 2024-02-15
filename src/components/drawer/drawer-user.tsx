@@ -3,7 +3,7 @@ import DrawerWrapper from './drawer-wrapper';
 import MenuItems from '../menu/menu-items';
 import Nav from '../nav';
 import UserBadge from '../header/header-user-badge';
-import { getCurrUser } from '../../../lib/kinde/actions';
+import { getCurrUser } from '../../../lib/kinde/funcs';
 
 
 
