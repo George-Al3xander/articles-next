@@ -17,7 +17,7 @@ const HighlightCode = ({ node, inline, className, children, ...props }: any) => 
 }
 
 const MarkdownRender = ({children}:{children: string}) =>
-(<ReactMarkdown children={children} components={{code: HighlightCode}}/>)
+(<ReactMarkdown className={"markdown-container"} children={children} components={{code: HighlightCode}}/>)
 
 export default MarkdownRender
 

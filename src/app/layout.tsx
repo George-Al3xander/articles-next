@@ -3,7 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 import { Container, ThemeProvider } from "@mui/material";
-import theme from "@/mui/theme";
+import theme from "@/components/mui/theme";
 import Header from "@/components/header/header";
 
 

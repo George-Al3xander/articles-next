@@ -1,4 +1,4 @@
-import AccordionWrapper from "@/mui/accordion-wrapper"
+import AccordionWrapper from "@/components/mui/accordion-wrapper"
 import { Avatar, Box,  List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 
 

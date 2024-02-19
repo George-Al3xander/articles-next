@@ -6,11 +6,13 @@ import { useRef, useState } from "react"
 import { Box, Button, Divider, FormControlLabel, Stack, Switch, TextField, Typography } from "@mui/material"
 import CategorySelect from "./category-select"
 import MarkdownRender from "../markdown/markdown-render"
-export type FieldVal = {title: string, content: string}
+import TagsSelect from "./tags-select"
+import { FieldVal } from "@/types/type"
+import TitleContentInputs from "./title-content-inputs"
 
 
 
-const CreatePostForm = ({onValidationSuccess,intialData}:{onValidationSuccess?: (data: FieldVal)  => Promise<{success: boolean, error?: string}>, intialData?: FieldVal}) => {
+const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?: (data: FieldVal)  => Promise<{success: boolean, error?: string}>, initialData?: FieldVal}) => {
     const tagsRef = useRef<string[]>([])
     
     const [preview,setPreview] =useState(false)
@@ -48,6 +50,7 @@ const CreatePostForm = ({onValidationSuccess,intialData}:{onValidationSuccess?: 
             }
             return 
         }
+       
         if(tagsRef.current.length > 0) {
             // do something if have tags
         }
@@ -61,67 +64,47 @@ const CreatePostForm = ({onValidationSuccess,intialData}:{onValidationSuccess?: 
         
     }
       
-    const {
-        register, 
-        handleSubmit,         
-        formState: {errors, isSubmitting},
-        reset,   
-        watch,
-        getValues,    
-        setError
-    } = useForm<TPostCreationSchema>({
+    const formReturn = useForm<TPostCreationSchema>({
         resolver: zodResolver(PostCreationSchema)
     })
 
-
-    const inputs : {multiline:boolean, name: "title" | "content"}[] = [
-        {
-            multiline: false,
-            name:"title"            
-        },
-        {
-            multiline: true,
-            name:"content"            
-        }
-    ]
+    const {        
+        handleSubmit,         
+        formState: {errors, isSubmitting},
+        control,
+        getValues,    
     
-    return(<Box>
-        {/* <FormControlLabel control={<Switch />} label="Live preview" /> */}
+        setError
+    } = formReturn
 
-        {preview ? 
-        <Stack>
-            <Divider />
-            <MarkdownRender>{getValues("content")}</MarkdownRender>
-            <Divider />
-            <Button variant="contained" onClick={() => setPreview(false)}>Go back</Button>
-        </Stack>
 
-        :           
-        
+   
+
+    return(<Box>        
         <form autoComplete="off" onSubmit={handleSubmit(onSubmit)} >          
             <Stack my={4} gap={2}>
-                {inputs.map(({name,multiline}) => <TextField 
-                    required                     
-                    multiline={multiline}
-                    defaultValue={intialData ? intialData[name] : ""} 
-                    placeholder={`Enter ${name}`}
-                    error={errors[name] != undefined}
-                    helperText={(errors[name] && errors) ? errors[name]!.message : "" }
-                    label={name.charAt(0).toUpperCase()+name.slice(1,name.length)} 
-                    {...register(name)}  
-                    type={"text"}
-                
-                />)}
-                {/* <CategorySelect /> */}
-            <Button type="submit" disabled={isSubmitting} variant="contained">Suggest{isSubmitting ? "ing..." : ""}</Button>
-            <Button  onClick={() => setPreview(true)}>Preview</Button>
+                <TitleContentInputs initialData={initialData} isPreview={preview} {...formReturn}/>
+                {preview &&  
+                    <>
+                        <Divider />
+                            {/\S/.test(getValues("content")) 
+                            ? <MarkdownRender>{getValues("content")}</MarkdownRender>                   
+                            : <Typography mx={"auto"} sx={{opacity: ".5"}}>EMPTY</Typography>}
+                        <Divider />                    
+                    </>
+                }
+                <CategorySelect defaultValue={initialData?.category} control={control} errors={errors}/>
+                <TagsSelect defaultValue={JSON.stringify(initialData?.tags)} errors={errors} control={control}/>
+                {preview 
+                    ?   <Button variant="contained" onClick={() => setPreview(false)}>Go back</Button>
+                    :<>
+                        <Button type="submit" disabled={isSubmitting} variant="contained">Suggest{isSubmitting ? "ing..." : ""}</Button>
+                        <Button   onClick={() => setPreview(true)}>Preview</Button>
+                    </>                
+                }
             </Stack>
-            {/* <fieldset className="flex flex-col gap-4">
-                    <legend >Tags(optional)</legend>
-                    <TagsInput tagsRef={tagsRef}/>                    
-            </fieldset> */}            
         </form>
-        }
+        
     </Box>)
 }
 

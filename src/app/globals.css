@@ -7,3 +7,9 @@ a {
     all:unset;
     cursor: pointer;
 }
+
+.markdown-container {
+    
+   
+    word-wrap: break-word;
+}

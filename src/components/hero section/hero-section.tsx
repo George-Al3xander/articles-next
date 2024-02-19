@@ -1,5 +1,6 @@
-import { AnimatedListItem } from "@/mui/framer"
+import { AnimatedListItem } from "@/components/mui/framer"
 import { Button, List, ListItem, Stack, Typography } from "@mui/material"
+import Link from "next/link"
 
 
 const HeroSection = () => {
@@ -16,7 +17,9 @@ const HeroSection = () => {
                     </AnimatedListItem>              
             )}
         </List>
-        <Button variant="contained">Suggest a post</Button>
+        <Link href={"/posts/create"}> 
+             <Button variant="contained">Suggest a post</Button>
+        </Link>
     </Stack>)
 }
 

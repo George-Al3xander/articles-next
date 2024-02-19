@@ -1,4 +1,4 @@
-import AccordionWrapper from "@/mui/accordion-wrapper";
+import AccordionWrapper from "@/components/mui/accordion-wrapper";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 
 
