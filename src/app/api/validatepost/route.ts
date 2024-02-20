@@ -6,7 +6,7 @@ import { PostCreationSchema } from "../../../../lib/zod/schema";
 
 export async function POST(request: Request) {
     
-    const body: unknown | {tags: string[]} = await request.json();
+    const body: unknown  = await request.json();
     let zodErrs = {}   
     const res = PostCreationSchema.safeParse(body);
     if(!res.success) {

@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown"
 import  {Prism} from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
+
 const HighlightCode = ({ node, inline, className, children, ...props }: any) =>  {
     const match = /language-(\w+)/.exec(className || '');
 
@@ -16,8 +17,11 @@ const HighlightCode = ({ node, inline, className, children, ...props }: any) => 
     );
 }
 
+const ImageRenderer = (props: any) => (<img style={{maxWidth: '100%'}} {...props}/>)
+
+
 const MarkdownRender = ({children}:{children: string}) =>
-(<ReactMarkdown className={"markdown-container"} children={children} components={{code: HighlightCode}}/>)
+(<ReactMarkdown className={"markdown-container"} children={children} components={{code: HighlightCode, img: ImageRenderer, image:ImageRenderer}}/>)
 
 export default MarkdownRender
 

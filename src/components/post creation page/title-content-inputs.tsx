@@ -1,5 +1,5 @@
 import { FieldVal } from "@/types/type"
-import { TextField } from "@mui/material"
+import { TextField, TextFieldProps } from "@mui/material"
 import { FieldErrors, UseFormReturn } from "react-hook-form"
 
 
@@ -7,14 +7,14 @@ import { FieldErrors, UseFormReturn } from "react-hook-form"
 
 const TitleContentInputs = ({isPreview, register, formState: {errors}, initialData}:{isPreview: boolean, initialData?: FieldVal} & UseFormReturn<FieldVal>) => {
     
-    const inputs : {multiline:boolean, name: "title" | "content", rows?: number, isHidden?: boolean}[] = [
+    const inputs : ({name: "title" | "content", isHidden?: boolean} & TextFieldProps)[] = [
         {
             multiline: false,
             name:"title"            
         },
         {
             multiline: true,
-            rows: 3,
+            minRows: 3,
             name:"content",
             isHidden: isPreview         
         }

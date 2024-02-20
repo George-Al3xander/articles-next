@@ -1,15 +1,15 @@
 import { Autocomplete, Box, FormControl, InputLabel, MenuItem,  TextField } from "@mui/material"
 import Select, { SingleValue } from 'react-select';
-import categories from "../../categories.json"
+import {categories} from "../../../public/json/categories.json"
 import { ControlledInputProps, FieldVal } from "@/types/type"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { FormError, reactSelectStyles } from "../mui/styled";
 
 
 
-const CategorySelect = ({control, errors,defaultValue}:  ControlledInputProps) => {
+const CategorySelect = ({control, errors,defaultValue}:  ControlledInputProps<string>) => {
   
-  const cats = categories.categories.map((cat) => ({value: cat, label: cat}))
+  const cats = categories.map((cat) => ({value: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1)}))
   
   return (
     <Box>
@@ -20,7 +20,7 @@ const CategorySelect = ({control, errors,defaultValue}:  ControlledInputProps) =
             <Select 
               placeholder="Select category" 
               isSearchable={false} 
-              defaultInputValue={defaultValue as string}
+              defaultValue={(defaultValue != undefined && categories.includes(defaultValue)) ? {value: defaultValue, label: defaultValue.charAt(0).toUpperCase() + defaultValue.slice(1) } : undefined}
               styles={reactSelectStyles({isError: errors.category != undefined})}
             //@ts-ignore
               onChange={({value})=> onChange(value)} 

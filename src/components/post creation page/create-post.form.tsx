@@ -13,25 +13,23 @@ import TitleContentInputs from "./title-content-inputs"
 
 
 const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?: (data: FieldVal)  => Promise<{success: boolean, error?: string}>, initialData?: FieldVal}) => {
-    const tagsRef = useRef<string[]>([])
+    
     
     const [preview,setPreview] =useState(false)
 
     const onSubmit = async (data: FieldVal) => {
-        const res = await fetch("/api/createpost", {
+     
+        const res = await fetch("/api/validatepost", {
             method: "POST",
-            body: JSON.stringify({
-                title: data.title,
-                content: data.content
-            })
+            body: JSON.stringify(data)
         })
-
-        const resData = await res.json()
+    
         if(!res.ok) {
             alert("Sumbtitting failed")
             return 
         }
-
+        
+        const resData = await res.json()
         if(resData.errors) {
             const errors = resData.errors;
             
@@ -40,20 +38,32 @@ const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?:
                     type: "server",
                     message: errors.title
                 })
-            } else if(errors.content) {             
+            } 
+            else if(errors.content) {             
                 setError("content", {
                     type: "server",
                     message: errors.content
                 })
-            } else {
+            } 
+            else if(errors.tags) {             
+                setError("tags", {
+                    type: "server",
+                    message: errors.tags
+                })
+            } 
+            else if(errors.category) {             
+                setError("category", {
+                    type: "server",
+                    message: errors.category
+                })
+            }
+            
+            else {
                 alert("Bruh")
             }
             return 
         }
-       
-        if(tagsRef.current.length > 0) {
-            // do something if have tags
-        }
+       // console.log({...data,tags: JSON.stringify(data.tags)})        
         //const submitRes = await onSuccess(data)
         // if(!submitRes.success) {
         //     toast.error(submitRes.error ?? "Something went wrong");
@@ -93,8 +103,8 @@ const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?:
                         <Divider />                    
                     </>
                 }
-                <CategorySelect defaultValue={initialData?.category} control={control} errors={errors}/>
-                <TagsSelect defaultValue={JSON.stringify(initialData?.tags)} errors={errors} control={control}/>
+                <CategorySelect defaultValue={"travel"} control={control} errors={errors}/>
+                <TagsSelect defaultValue={initialData?.tags} errors={errors} control={control}/>
                 {preview 
                     ?   <Button variant="contained" onClick={() => setPreview(false)}>Go back</Button>
                     :<>
@@ -103,8 +113,7 @@ const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?:
                     </>                
                 }
             </Stack>
-        </form>
-        
+        </form>        
     </Box>)
 }
 
