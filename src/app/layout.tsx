@@ -5,7 +5,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 import { Container, ThemeProvider } from "@mui/material";
 import theme from "@/components/mui/theme";
 import Header from "@/components/header/header";
-
+import { Toaster } from 'react-hot-toast';
 
 
 const inter = Nunito_Sans({ subsets: ["latin"] });

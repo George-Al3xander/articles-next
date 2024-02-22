@@ -14,7 +14,13 @@ const AdminMenu = async () => {
         {postsCount[0].value ?
         <>
             {pendings.map(async (post) => {
-                const userInfo = await getUserInfo(post.authorId)
+                const userInfo = await getUserInfo(post.authorId);
+                let err: string | null = null;
+               
+                if(userInfo.success == false) {
+                    err = "Problem getting user credtials"
+                }
+              
                 const dateCreated =  moment(post.createdAt);
                 const now = moment()               
                 const displayDate = Math.abs(dateCreated.diff(now, "days")) > 7 ? " on " + dateCreated.format("ll") : dateCreated.from(now)
@@ -24,7 +30,7 @@ const AdminMenu = async () => {
                         <Stack>  
                             <Typography> {post.title}</Typography>
                             <Typography  variant="subtitle2">Suggested  {displayDate}</Typography>
-                            <Typography  variant="subtitle2">By {`${userInfo.given_name} ${userInfo.family_name}`}</Typography>
+                            <Typography color={err  ? "red" : ""} variant="subtitle2">{err ?? `By ${userInfo.given_name ?? ""} ${userInfo.family_name ?? ""}`} </Typography>
                             <Divider />                            
                         </Stack>
                     </Link>

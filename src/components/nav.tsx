@@ -1,5 +1,5 @@
 import { Button, MenuItem, Stack } from "@mui/material"
-import {categories} from "../../public/json/categories.json"
+import categories from "../../public/json/categories.json"
 import NextLink from "next/link"
 
 
@@ -13,7 +13,7 @@ const Nav = ({type}: NavProps) => (<Stack gap={1}  direction={type == "header" ?
         {type == "drawer"  &&  <MenuItem>Home</MenuItem>}
         
     </NextLink>
-    {categories.map((cat) => 
+    {categories.categories.map((cat) => 
         <NextLink key={`nav-${cat}`} href={`/${cat}`}>            
             {type == "header"  &&  <Button color="primary">{cat}</Button>}
             {type == "drawer"  &&  <MenuItem>{cat}</MenuItem>}

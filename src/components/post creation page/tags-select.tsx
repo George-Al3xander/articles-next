@@ -1,11 +1,9 @@
+import Creatable from 'react-select/creatable';
+import  {  MultiValue} from 'react-select';
+import {  Controller} from 'react-hook-form';
 
-import { useState } from 'react';
-import Creatable, { useCreatable } from 'react-select/creatable';
-import  { ActionMeta, MultiValue, PropsValue } from 'react-select';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
 
-import { object } from 'zod';
-import { Box, Typography } from '@mui/material';
+import { Box} from '@mui/material';
 import { ControlledInputProps } from '@/types/type';
 import { FormError, reactSelectStyles } from '../mui/styled';
 

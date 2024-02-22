@@ -1,16 +1,23 @@
-import { FieldVal } from "@/types/type"
 import { TextField, TextFieldProps } from "@mui/material"
-import { FieldErrors, UseFormReturn } from "react-hook-form"
+import { UseFormReturn } from "react-hook-form"
+import { TPostCreationSchema, FormInputs } from "../../../lib/zod/schema"
 
 
 
 
-const TitleContentInputs = ({isPreview, register, formState: {errors}, initialData}:{isPreview: boolean, initialData?: FieldVal} & UseFormReturn<FieldVal>) => {
+const TextFieldInputs = ({isPreview, register, formState: {errors}, initialData}:{isPreview: boolean, initialData?: TPostCreationSchema} & UseFormReturn<TPostCreationSchema>) => {
     
-    const inputs : ({name: "title" | "content", isHidden?: boolean} & TextFieldProps)[] = [
+    const inputs : ({name: FormInputs, isHidden?: boolean} & TextFieldProps)[] = [
         {
             multiline: false,
             name:"title"            
+        },
+        {
+            multiline: true,
+            minRows: 3,
+            maxRows: 5,
+            name:"description",
+                
         },
         {
             multiline: true,
@@ -36,4 +43,4 @@ const TitleContentInputs = ({isPreview, register, formState: {errors}, initialDa
     }))
 }
 
-export default TitleContentInputs
+export default TextFieldInputs

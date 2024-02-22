@@ -1,8 +1,8 @@
-import { Autocomplete, Box, FormControl, InputLabel, MenuItem,  TextField } from "@mui/material"
-import Select, { SingleValue } from 'react-select';
+import {  Box} from "@mui/material"
+import Select from 'react-select';
 import {categories} from "../../../public/json/categories.json"
-import { ControlledInputProps, FieldVal } from "@/types/type"
-import { Controller, UseFormRegister } from "react-hook-form"
+import { ControlledInputProps } from "@/types/type"
+import { Controller } from "react-hook-form"
 import { FormError, reactSelectStyles } from "../mui/styled";
 
 

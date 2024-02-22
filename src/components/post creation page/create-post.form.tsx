@@ -7,91 +7,24 @@ import { Box, Button, Divider, FormControlLabel, Stack, Switch, TextField, Typog
 import CategorySelect from "./category-select"
 import MarkdownRender from "../markdown/markdown-render"
 import TagsSelect from "./tags-select"
-import { FieldVal } from "@/types/type"
-import TitleContentInputs from "./title-content-inputs"
+import {  onSuccessFunction } from "@/types/type"
+import TitleContentInputs from "./textfield-inputs"
+import usePostUpsert from "@/hooks/usePostUpsert"
+import toast, { Toaster } from 'react-hot-toast';
 
 
 
-const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?: (data: FieldVal)  => Promise<{success: boolean, error?: string}>, initialData?: FieldVal}) => {
-    
-    
-    const [preview,setPreview] =useState(false)
+const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess: onSuccessFunction, initialData?: TPostCreationSchema}) => {
+       
 
-    const onSubmit = async (data: FieldVal) => {
-     
-        const res = await fetch("/api/validatepost", {
-            method: "POST",
-            body: JSON.stringify(data)
-        })
-    
-        if(!res.ok) {
-            alert("Sumbtitting failed")
-            return 
-        }
-        
-        const resData = await res.json()
-        if(resData.errors) {
-            const errors = resData.errors;
-            
-            if(errors.title) {
-                setError("title", {
-                    type: "server",
-                    message: errors.title
-                })
-            } 
-            else if(errors.content) {             
-                setError("content", {
-                    type: "server",
-                    message: errors.content
-                })
-            } 
-            else if(errors.tags) {             
-                setError("tags", {
-                    type: "server",
-                    message: errors.tags
-                })
-            } 
-            else if(errors.category) {             
-                setError("category", {
-                    type: "server",
-                    message: errors.category
-                })
-            }
-            
-            else {
-                alert("Bruh")
-            }
-            return 
-        }
-       // console.log({...data,tags: JSON.stringify(data.tags)})        
-        //const submitRes = await onSuccess(data)
-        // if(!submitRes.success) {
-        //     toast.error(submitRes.error ?? "Something went wrong");
-        // } else {
-        //     toast.success('Post created');            
-        //     reset();                   
-        // }
-        
-    }
-      
-    const formReturn = useForm<TPostCreationSchema>({
-        resolver: zodResolver(PostCreationSchema)
-    })
-
-    const {        
-        handleSubmit,         
-        formState: {errors, isSubmitting},
-        control,
-        getValues,    
-    
-        setError
-    } = formReturn
-
+    const [preview,setPreview] = useState(false)      
+    const formReturn = usePostUpsert({onValidationSuccess})
+    const {control, getValues, formState: {errors, isSubmitting}, submitForm} = formReturn
 
    
 
     return(<Box>        
-        <form autoComplete="off" onSubmit={handleSubmit(onSubmit)} >          
+        <form autoComplete="off" onSubmit={submitForm} >          
             <Stack my={4} gap={2}>
                 <TitleContentInputs initialData={initialData} isPreview={preview} {...formReturn}/>
                 {preview &&  
@@ -103,7 +36,7 @@ const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?:
                         <Divider />                    
                     </>
                 }
-                <CategorySelect defaultValue={"travel"} control={control} errors={errors}/>
+                <CategorySelect defaultValue={initialData?.category} control={control} errors={errors}/>
                 <TagsSelect defaultValue={initialData?.tags} errors={errors} control={control}/>
                 {preview 
                     ?   <Button variant="contained" onClick={() => setPreview(false)}>Go back</Button>
@@ -113,6 +46,9 @@ const CreatePostForm = ({onValidationSuccess,initialData}:{onValidationSuccess?:
                     </>                
                 }
             </Stack>
+             <Toaster />
+
+            <Button onClick={() => toast.error("Hello")}>Toast</Button>
         </form>        
     </Box>)
 }
