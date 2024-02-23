@@ -48,12 +48,12 @@ const postDbAction = async ({callbackFn, data}:
 }
 
 
-export const createPost = async (data:NewPostAsParam) => {    
+export const createPost = async (data:Omit<NewPostAsParam, "authorId">) => {    
     const res = await postDbAction({callbackFn:insertPost, data})
     return res
 }
 
-export const suggestPost = async (data:NewPostAsParam) => {    
+export const suggestPost = async (data:Omit<NewPostAsParam, "authorId">) => {    
     const res = await postDbAction({callbackFn:insertSuggestion, data})
     return res
 }

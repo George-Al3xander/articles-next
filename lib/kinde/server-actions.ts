@@ -8,7 +8,7 @@ import { cookies } from "next/headers"
 
 
 export const getKindeReqHeaders =  () => {  
-    const token = cookies().get("token_kinde_api");      
+    const token = cookies().get("token_kinde_api");          
     return {
         Accept:'application/json',
         Authorization:`Bearer ${token!.value as string}`

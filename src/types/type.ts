@@ -1,14 +1,12 @@
-import { Control, FieldErrors } from "react-hook-form"
+import { Control, FieldErrors, UseFormReturn } from "react-hook-form"
 import { NewPostAsParam } from "../../lib/db/methods"
 import { TPostCreationSchema } from "../../lib/zod/schema"
 
 
 
 export type ControlledInputProps<TDefVal> = {
-    control: Control<TPostCreationSchema>, 
-    errors: FieldErrors<TPostCreationSchema>,
-    defaultValue?: TDefVal
-}
+     defaultValue?: TDefVal  
+} & UseFormReturn<TPostCreationSchema>
 
 export type onSuccessFunction = (data: Omit<NewPostAsParam, "authorId">)  => Promise<{success: boolean, error?: string}>
 

@@ -14,7 +14,7 @@ const usePostUpsert = ({onValidationSuccess}:{onValidationSuccess: onSuccessFunc
         resolver: zodResolver(PostCreationSchema)
     })
 
-    const {handleSubmit,setError,reset} = formReturn
+    const {handleSubmit,setError} = formReturn
 
     const onSubmit = async (data: TPostCreationSchema) => {
      
@@ -63,8 +63,7 @@ const usePostUpsert = ({onValidationSuccess}:{onValidationSuccess: onSuccessFunc
             return 
         }
       
-        const submitRes = await new Promise((resolve) => setTimeout(() => resolve({success: true}), 3000))
-        //onValidationSuccess({...data,tags: JSON.stringify(data.tags)})
+        const submitRes = await onValidationSuccess({...data,tags: JSON.stringify(data.tags)})
         if(!submitRes.success) {
             toast.error(submitRes.error ?? "Something went wrong");
         } else {

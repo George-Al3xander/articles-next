@@ -11,10 +11,10 @@ const HeroSection = () => {
         <Typography fontWeight={600} color="primary.main" variant={"h3"}>So what's the deal?</Typography>
         <List>
             {steps.map((step, index) =>              
-                    <AnimatedListItem key={step + index} index={index}>
-                        <Typography color="primary.main" variant="h5">{index + 1}</Typography>
-                        {` ${step}`}
-                    </AnimatedListItem>              
+                <AnimatedListItem key={step + index + "wrapper"} index={index}>
+                    <Typography color="primary.main" variant="h5">{index + 1}</Typography>
+                    {` ${step}`}
+                </AnimatedListItem>              
             )}
         </List>
         <Link href={"/posts/create"}> 

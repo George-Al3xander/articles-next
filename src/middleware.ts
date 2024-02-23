@@ -1,17 +1,16 @@
 import { NextRequest , NextResponse} from 'next/server'
 import { getCurrAuthStatus } from '../lib/kinde/funcs'
-import { NextApiResponse } from 'next';
-import { cookies } from "next/headers"
+
+
 import { getToken } from '../lib/kinde/server-actions';
 
 
 export async function middleware(request: NextRequest) {
   const isLogged = await getCurrAuthStatus();
   const response = NextResponse.next()
-
-    if(isLogged) {
-      const  hasToken = request.cookies.get('token_kinde_api')
-
+  const  hasToken = request.cookies.get('token_kinde_api')
+  
+  if(isLogged) {
       if(!hasToken) {
           const tokenRes = await getToken()
           if(tokenRes.success) {
@@ -27,10 +26,11 @@ export async function middleware(request: NextRequest) {
             }) 
           }                            
       }
-    } else {
-      if (request.nextUrl.pathname.startsWith('/posts/create')) {
-            return NextResponse.redirect(new URL('/api/auth/login', request.url));        
-        }
+    } else {     
+      if(hasToken) response.cookies.delete("token_kinde_api");   
+    }
+    if(request.nextUrl.pathname.startsWith('/posts/create') && !isLogged) {      
+        return NextResponse.redirect(new URL('/api/auth/login', request.url));        
     }
 
   return response
