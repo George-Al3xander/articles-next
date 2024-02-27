@@ -2,6 +2,7 @@ import { count, desc, eq } from "drizzle-orm"
 import { db } from "./index"
 import { likes, pending, posts} from "./schema"
 import { getCurrAuthStatus, getCurrUser } from "../kinde/funcs"
+import { redirect } from "next/navigation"
 
 export const getPosts = async () => {
     const selectResult = await db.select().from(posts).orderBy(desc(posts.createdAt))
@@ -86,4 +87,6 @@ export const isCurrUserLiked = async () => {
 
     return Boolean(likesCount[0].value)
 }
+
+
 

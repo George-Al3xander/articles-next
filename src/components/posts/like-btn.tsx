@@ -1,34 +1,51 @@
+"use client"
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { getPostLikesCount, isCurrUserLiked } from '../../../lib/db/methods';
-import { Button, Grow, IconButton, Stack, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Grow, IconButton,  Typography } from '@mui/material';
+import { SyntheticEvent, useState } from 'react';
+import {  useRouter } from 'next/navigation';
+import { likePost } from '../../../lib/actions';
 
 
-const LikeBtn = async ({postId}:{postId:  number}) => {
+const LikeBtn =  ({postId,isLiked, likesCount,authStatus}:{postId:  number, likesCount: number,isLiked: boolean, authStatus: boolean}) => {
    
+    const [count, setCount] = useState(likesCount);
+    const [likeStatus, setLikeStatus] = useState(isLiked);    
+    const {push} = useRouter()
 
-    const likes = await getPostLikesCount(postId);
-    const isLiked = await isCurrUserLiked()
 
+    const handleClick = async (e:  SyntheticEvent) => {
+        e.preventDefault();         
+        if(authStatus) {
+            if(likeStatus) {
+                setCount(prev => prev - 1)
+            } else {
+                setCount(prev => prev + 1)
+            }
+            setLikeStatus(prev => !prev)
+            const likeRes =  await likePost({postId,likesCount, likeStatus});
+            console.log(likeRes)
+            setCount(likeRes.likesCount)
+            setLikeStatus(likeRes.likeStatus)
+        } else {
+            push('/api/auth/login')
+        }      
+    }
    
-  
     
-    return(<IconButton sx={{alignSelf:"center"}} color="error"  aria-label='like button'>
-        {isLiked 
+    return(<IconButton onClick={handleClick} sx={{alignSelf:"center"}} color="error"  aria-label='like button'>
+        {likeStatus 
             ? <FavoriteIcon />
             : <FavoriteBorderIcon />
         }   
-        {/* <Grow {...(likes > 0 ? { timeout: 700 } : {})} mountOnEnter unmountOnExit in={isLiked}><FavoriteIcon /></Grow>
-        <Grow {...(likes <= 0 ? { timeout: 1400 } : {})} mountOnEnter unmountOnExit in={!isLiked}><FavoriteBorderIcon /></Grow> */}
         <Grow  
             mountOnEnter 
             unmountOnExit
-            in={likes > 0}
+            in={count > 0}
             style={{ transformOrigin: '0 0 0' }} 
-            {...(likes > 0 ? { timeout: 700 } : {})}
+            {...(count > 0 ? { timeout: 700 } : {})}
         >
-            <Typography ml={0.3} my="auto" color={"black"}>{likes > 0 ? likes : ""}</Typography>
+            <Typography ml={0.3} my="auto" color={"black"}>{count > 0 ? count : ""}</Typography>
         </Grow>  
     </IconButton>)
 }

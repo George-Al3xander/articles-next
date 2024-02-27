@@ -21,7 +21,7 @@ const HomeTabs = async ({tabValue}: {tabValue?:string}) => {
         <Tabs  value={tabValue ?? "latest"}>
             {tabs.map((tab) =><Tab href={`?tabValue=${tab.value}`} LinkComponent={Link} {...tab}/>)}
         </Tabs>
-       <Grid rowSpacing={2} container spacing={4}>
+       <Grid rowSpacing={4} container spacing={4}>
             {posts.length < 4 ?
             arr.map((post) => <Grid xs={12} md={6} key={"mock-post"+post} item><PostPreview {...posts[0]}/></Grid >)
             :

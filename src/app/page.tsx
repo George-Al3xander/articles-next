@@ -3,6 +3,7 @@ import HomeTabs from "@/components/tabs/home-tabs";
 
 
 
+
 export default function Home({searchParams: {tabValue}}: {searchParams: {tabValue?:string}}) {
  
   
