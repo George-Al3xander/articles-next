@@ -5,40 +5,33 @@ import { getPendingCount, getPendingPreview } from "../../../lib/db/methods";
 import Link from "next/link";
 import { getUserInfo } from "../../../lib/kinde/server-actions";
 import TimeFromDate from "../util comps/time-from-date";
+import PostAuthorInfo from "../util comps/post-author-info";
 
 
 const AdminMenu = async () => {   
     const postsCount = await getPendingCount();
     const pendings = await getPendingPreview();
-    return(<MenuWrapper trigger={<IconButton><Badge color="info" badgeContent={postsCount[0].value}><NotificationsIcon /></Badge></IconButton>}>
-        {postsCount[0].value ?
+    return(<MenuWrapper trigger={<IconButton><Badge color="info" badgeContent={postsCount}><NotificationsIcon /></Badge></IconButton>}>
+        {postsCount ?
         <>
-            {pendings.map(async (post) => {
-                const userInfo = await getUserInfo(post.authorId);
-                let err: string | null = null;
-               
-                if(userInfo.success == false) {
-                    err = "Problem getting user credtials"
-                }
-              
-
+            {pendings.map((post) => {
                 return <MenuItem key={post.id+"-post-preview"}>
                     <Link href={`/pending/${post.id}`}>
                         <Stack>  
                             <Typography> {post.title}</Typography>
                             <Typography  variant="subtitle2">Suggested  {<TimeFromDate start={post.createdAt}/>}</Typography>
-                            <Typography color={err  ? "red" : ""} variant="subtitle2">{err ?? `By ${userInfo.given_name ?? ""} ${userInfo.family_name ?? ""}`} </Typography>
+                            <Typography variant="subtitle2"><PostAuthorInfo authorId={post.authorId}/></Typography>
                             <Divider />                            
                         </Stack>
                     </Link>
                 </MenuItem>
             })}
-                {postsCount[0].value > 3 &&
+                {postsCount > 3 &&
                 <>
                     <Divider />
                     <MenuItem>
                         <Link href={`/pending`}>
-                        View {postsCount[0].value  - pendings.length} remaining suggestions
+                        View {postsCount  - pendings.length} remaining suggestions
                         </Link>
                     </MenuItem>
                 </>}

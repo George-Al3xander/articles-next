@@ -1,6 +1,7 @@
 import { count, desc, eq } from "drizzle-orm"
 import { db } from "./index"
-import { pending, posts} from "./schema"
+import { likes, pending, posts} from "./schema"
+import { getCurrAuthStatus, getCurrUser } from "../kinde/funcs"
 
 export const getPosts = async () => {
     const selectResult = await db.select().from(posts).orderBy(desc(posts.createdAt))
@@ -8,7 +9,7 @@ export const getPosts = async () => {
 }
 
 
-export async function getPostsPagination  (page:number= 1, limit:number= 5)  {    
+export async function getPostsPagination  (page:number= 1, limit:number= 4)  {    
     const skip = (page - 1) * limit
     try {
         const dbPosts = await db.select()
@@ -17,7 +18,7 @@ export async function getPostsPagination  (page:number= 1, limit:number= 5)  {
 	    .limit(limit)
 	    .offset(skip)       
 
-        return JSON.parse(JSON.stringify(dbPosts))
+        return JSON.parse(JSON.stringify(dbPosts)) as NewPost[]
     } catch (error) {
         console.log(error)
         return []
@@ -52,10 +53,15 @@ export const getPost =async (id: number) => {
     return post 
 }
 
+
+
+
 export const getPendingCount = async() => {
     const postsCount = await db.select({ value: count() }).from(posts);
-    return postsCount
+    return postsCount[0].value
 }
+
+
 
 export const getPendingPreview = async  () => {
     const postsReturn = await db.select().from(posts).orderBy(desc(posts.createdAt)).limit(3)
@@ -63,4 +69,21 @@ export const getPendingPreview = async  () => {
     return postsReturn
 }
 
+export const getPostLikesCount = async (postId: number) => {
+    const likesCount = await db.select({ value: count() }).from(likes).where(eq(likes.postId, postId));
+    return likesCount[0].value
+}
+
+
+export const isCurrUserLiked = async () => {
+    const logStatus = await getCurrAuthStatus()
+    if(!logStatus) return false;
+
+    const currUser = await getCurrUser();
+    if(!currUser) return false;
+
+    const likesCount = await db.select({ value: count() }).from(likes).where(eq(likes.userId, currUser?.id));
+
+    return Boolean(likesCount[0].value)
+}
 

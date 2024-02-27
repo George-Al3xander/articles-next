@@ -1,5 +1,5 @@
 import { AnimatedListItem } from "@/components/mui/framer"
-import { Button, List, ListItem, Stack, Typography } from "@mui/material"
+import { Button, List, ListItem, Slide, Stack, Typography } from "@mui/material"
 import Link from "next/link"
 
 
@@ -11,10 +11,14 @@ const HeroSection = () => {
         <Typography fontWeight={600} color="primary.main" variant={"h3"}>So what's the deal?</Typography>
         <List>
             {steps.map((step, index) =>              
-                <AnimatedListItem key={step + index + "wrapper"} index={index}>
-                    <Typography color="primary.main" variant="h5">{index + 1}</Typography>
-                    {` ${step}`}
-                </AnimatedListItem>              
+                // <AnimatedListItem key={step + index + "wrapper"} index={index}>
+                    <Slide key={step + index + "wrapper"} direction="right" timeout={1000 + index * 200} in>
+                        <Stack direction={"row"}>
+                            <Typography color="primary.main" variant="h5">{index + 1}</Typography>
+                            {` ${step}`}
+                        </Stack>
+                    </Slide>
+                // </AnimatedListItem>              
             )}
         </List>
         <Link href={"/posts/create"}> 

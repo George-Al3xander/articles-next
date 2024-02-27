@@ -5,14 +5,21 @@ import {loadEnvConfig} from "@next/env"
 import { cookies } from "next/headers"
 
 
+const headerTemplate = (token: string) => ({
+    Accept:'application/json',
+    Authorization:`Bearer ${token}`
+})
 
 
-export const getKindeReqHeaders =  () => {  
+export const getKindeReqHeaders = async () => {  
+    const hasToken = cookies().has("token_kinde_api")
+    if(!hasToken) {
+        const tokenReq = await getToken()
+        if(!tokenReq.success || !('access_token' in tokenReq)) return
+        return headerTemplate(tokenReq.access_token);
+    }
     const token = cookies().get("token_kinde_api");          
-    return {
-        Accept:'application/json',
-        Authorization:`Bearer ${token!.value as string}`
-    };
+    return headerTemplate(token!.value as string);
 }
 
 
@@ -20,7 +27,7 @@ export const getKindeReqHeaders =  () => {
 export const getUserInfo = async (userId: string)  => {
     loadEnvConfig(process.cwd())
 
-    const kindeReqHeaders = getKindeReqHeaders();
+    const kindeReqHeaders = await getKindeReqHeaders();
     try {
         const res = await fetch(`${process.env.KINDE_ISSUER_URL!}/api/v1/user?id=${userId}`, {
             method: "GET",
